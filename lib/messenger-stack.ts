@@ -9,7 +9,7 @@ export class MessengerStack extends cdk.Stack {
     super(scope, id, props)
 
     // User Pool for authentication
-    const userPool = new cg.UserPool(this, 'twitterApiAuth', {
+    const userPool = new cg.UserPool(this, 'messengerAuth', {
       selfSignUpEnabled: true,
       autoVerify: { email: true },
       passwordPolicy: {
@@ -20,10 +20,9 @@ export class MessengerStack extends cdk.Stack {
       standardAttributes: {
         fullname: { required: false, mutable: true },
       },
-      // lambdaTriggers: { postConfirmation: confirmUserSignup },
     })
 
-    const userPoolClient = new cg.UserPoolClient(this, 'twitterApiAuthClient', {
+    const userPoolClient = new cg.UserPoolClient(this, 'messengerAuthClient', {
       userPool: userPool,
       userPoolClientName: 'web',
       authFlows: { userSrp: true, userPassword: true },
@@ -77,8 +76,27 @@ export class MessengerStack extends cdk.Stack {
     })
 
     // Add resolvers for fetching data
-    api.addDynamoDbDataSource('message', messageTable)
-    api.addDynamoDbDataSource('room', roomTable)
+    const messageResolverDdb = api.addDynamoDbDataSource(
+      'message',
+      messageTable
+    )
+    const roomResolverDdb = api.addDynamoDbDataSource('room', roomTable)
+
+    for (let { fieldName, typeName } of messageResolvers) {
+      messageResolverDdb.createResolver({
+        fieldName,
+        typeName,
+        ...getMappingTemplates({ typeName, fieldName }),
+      })
+    }
+
+    for (let { fieldName, typeName } of roomResolvers) {
+      roomResolverDdb.createResolver({
+        fieldName,
+        typeName,
+        ...getMappingTemplates({ typeName, fieldName }),
+      })
+    }
 
     // all Cloudformation outputs
     new cdk.CfnOutput(this, 'UserPoolId', {
@@ -93,4 +111,31 @@ export class MessengerStack extends cdk.Stack {
       value: api.graphqlUrl,
     })
   }
+}
+
+const messageResolvers = [
+  { typeName: 'Query', fieldName: 'listMessagesForRoom' },
+  { typeName: 'Mutation', fieldName: 'createMessage' },
+]
+
+const roomResolvers = [
+  { typeName: 'Query', fieldName: 'listRooms' },
+  { typeName: 'Mutation', fieldName: 'createRoom' },
+]
+
+const getMappingTemplates = ({
+  typeName,
+  fieldName,
+}: {
+  typeName: string
+  fieldName: string
+}) => {
+  return {
+    requestMappingTemplate: appS.MappingTemplate.fromFile(
+      `mappingTemplates/${typeName}.${fieldName}.request.vtl`
+    ),
+    responseMappingTemplate: appS.MappingTemplate.fromFile(
+      `mappingTemplates/${typeName}.${fieldName}.response.vtl`
+    ),
+  } as const
 }

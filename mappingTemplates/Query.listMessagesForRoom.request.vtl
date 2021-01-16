@@ -1,0 +1,19 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Query",
+    "index" : "messages-in-room",
+    "query" : {
+        "expression": "roomId = :roomId",
+        "expressionValues" : {
+            ":roomId" : $util.dynamodb.toDynamoDBJson($ctx.arguments.roomId)
+        }
+    }
+    #if (!$util.isNull($ctx.arguments.sortDirection) && $ctx.arguments.sortDirection == "DESC")
+        ,"scanIndexForward": false
+    #else
+        ,"scanIndexForward": true
+    #end
+    #if ($ctx.arguments.nextToken)
+        ,"nextToken": "$ctx.arguments.nextToken"
+    #end
+}
