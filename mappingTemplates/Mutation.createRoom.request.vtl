@@ -1,10 +1,16 @@
-$util.qr($ctx.args.input.put("id", $util.defaultIfNull($ctx.args.input.id, $util.autoId())))
+## Automatically set room id
+#set($id = $util.autoId())
+
+## Automatically set the createdAt timestamp
+#set($createdAt = $util.time.nowISO8601())
+$util.qr($ctx.args.put("createdAt", $createdAt))
+
 {
     "version": "2018-05-29",
     "operation": "PutItem",
     "key": {
-        "id": $util.dynamodb.toDynamoDBJson($ctx.args.input.id)
+        "id": $util.dynamodb.toDynamoDBJson($id)
     },
-    "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input),
+    "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args),
     "condition": $util.toJson($condition)
 }

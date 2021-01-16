@@ -1,25 +1,18 @@
-## Set id if not passed in
-$util.qr($ctx.args.input.put("id", $util.defaultIfNull($ctx.args.input.id, $util.autoId())))
+## Automatically set message id
+#set($id = $util.autoId())
 
-## Automatically set the createdAt timestamp.
-#set( $createdAt = $util.time.nowISO8601() )
-$util.qr($ctx.args.input.put("createdAt", $ctx.args.input.createdAt))
+## Automatically set the createdAt timestamp
+#set($createdAt = $util.time.nowISO8601())
+$util.qr($ctx.args.input.put("createdAt", $createdAt))
 
 ## Automatically set the user's username on owner field
 $util.qr($ctx.args.input.put("owner", $ctx.identity.username))
 
-## Create a condition that will error if the id already exists
-#set($condition = {
-"expression": "attribute_not_exists(#id)",
-"expressionNames": {
-    "#id": "id"
-}})
 {
     "version": "2018-05-29",
     "operation": "PutItem",
     "key": {
-        "id": $util.dynamodb.toDynamoDBJson($ctx.args.input.id)
+        "id": $util.dynamodb.toDynamoDBJson($id)
     },
-    "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input),
-    "condition": $util.toJson($condition)
+    "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input)
 }
