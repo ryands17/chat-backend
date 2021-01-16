@@ -1,14 +1,14 @@
-# Welcome to your CDK TypeScript project!
+# Chat backend
 
-This is a blank project for TypeScript development with CDK.
+This is the backend for a simple chat application with AWS Amplify and the CDK
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ## Useful commands
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * `yarn build`   compile typescript to js
+ * `yarn watch`   watch for changes and compile
+ * `yarn test`    perform the jest unit tests
+ * `yarn deploy`      deploy this stack to your default AWS account/region
+ * `yarn cdk diff`        compare deployed stack with current state
+ * `yarn cdk synth`       emits the synthesized CloudFormation template
