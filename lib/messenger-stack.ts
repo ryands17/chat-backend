@@ -48,6 +48,7 @@ export class MessengerStack extends cdk.Stack {
       tableName: 'message',
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       partitionKey: { name: 'id', type: ddb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     })
 
     // GSI for getting all messages by room
@@ -73,6 +74,7 @@ export class MessengerStack extends cdk.Stack {
       tableName: 'room',
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       partitionKey: { name: 'id', type: ddb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     })
 
     // Add resolvers for fetching data
