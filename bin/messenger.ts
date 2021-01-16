@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
-import * as cdk from '@aws-cdk/core';
-import { MessengerStack } from '../lib/messenger-stack';
+import 'source-map-support/register'
+import * as cdk from '@aws-cdk/core'
+import { MessengerStack } from '../lib/messenger-stack'
 
-const app = new cdk.App();
-new MessengerStack(app, 'MessengerStack');
+const app = new cdk.App()
+new MessengerStack(app, 'MessengerStack')
