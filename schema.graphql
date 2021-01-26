@@ -40,6 +40,7 @@ type Query {
 type Mutation {
   createMessage(input: MessageInput): Message
   createRoom(name: String!): Room
+  deleteMessage(id: ID!): Message
 }
 
 input MessageInput {
@@ -50,5 +51,5 @@ input MessageInput {
 type Subscription {
   onCreateRoom: Room @aws_subscribe(mutations: ["createRoom"])
   onCreateMessageByRoomId(roomId: ID): Message
-    @aws_subscribe(mutations: ["createMessage"])
+    @aws_subscribe(mutations: ["createMessage", "deleteMessage"])
 }

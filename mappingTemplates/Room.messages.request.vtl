@@ -5,7 +5,7 @@
     "query" : {
         "expression": "roomId = :roomId",
         "expressionValues" : {
-            ":roomId" : $util.dynamodb.toDynamoDBJson($ctx.args.roomId)
+            ":roomId" : $util.dynamodb.toDynamoDBJson($ctx.source.id)
         }
     }
     #if (!$util.isNull($ctx.args.sortDirection) && $ctx.args.sortDirection == "DESC")

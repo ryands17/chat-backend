@@ -118,6 +118,8 @@ export class MessengerStack extends cdk.Stack {
 const messageResolvers = [
   { typeName: 'Query', fieldName: 'listMessagesForRoom' },
   { typeName: 'Mutation', fieldName: 'createMessage' },
+  { typeName: 'Mutation', fieldName: 'deleteMessage' },
+  { typeName: 'Room', fieldName: 'messages' },
 ]
 
 const roomResolvers = [
