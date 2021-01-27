@@ -1,1 +1,9 @@
-$util.toJson($ctx.result)
+#if ($ctx.error)
+    #if ($ctx.error.type.equals("DynamoDB:ConditionalCheckFailedException"))
+        $util.error("unable to delete message")
+    #else
+        $util.error($ctx.error.message, $ctx.error.type)
+    #end
+#else
+    $util.toJson($ctx.result)
+#end

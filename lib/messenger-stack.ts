@@ -17,9 +17,6 @@ export class MessengerStack extends cdk.Stack {
         requireDigits: false,
         requireSymbols: false,
       },
-      standardAttributes: {
-        fullname: { required: false, mutable: true },
-      },
     })
 
     const userPoolClient = new cg.UserPoolClient(this, 'messengerAuthClient', {
@@ -32,6 +29,7 @@ export class MessengerStack extends cdk.Stack {
     // Messenger GraphQL API
     const api = new appS.GraphqlApi(this, 'messenger', {
       name: 'messenger',
+      logConfig: { fieldLogLevel: appS.FieldLogLevel.ERROR },
       schema: appS.Schema.fromAsset('schema.graphql'),
       authorizationConfig: {
         defaultAuthorization: {

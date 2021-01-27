@@ -3,5 +3,14 @@
     "operation" : "DeleteItem",
     "key": {
         "id": $util.dynamodb.toDynamoDBJson($ctx.args.id)
+    },
+    "condition": {
+        "expression": "#o = :o",
+        "expressionNames": {
+            "#o": "owner"
+        },
+        "expressionValues" : {
+            ":o" : $util.dynamodb.toDynamoDBJson($ctx.identity.username)
+        }
     }
 }
